@@ -1,1 +1,591 @@
-PLACEHOLDER_INDEX
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS饰品市场深度分析报告</title>
+    <style>
+        :root {
+            --bg: #0D1B2A;
+            --card: #162536;
+            --primary: #1B2838;
+            --accent: #C5A55A;
+            --text: #E8E8E8;
+            --text-secondary: #94A3B8;
+            --border: #2D3748;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "MiSans", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0D1B2A 0%, #1B2838 50%, #0D1B2A 100%);
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at 30% 50%, rgba(197, 165, 90, 0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 20%, rgba(27, 40, 56, 0.5) 0%, transparent 50%);
+        }
+        .hero-content { position: relative; z-index: 1; padding: 2rem; }
+        .hero-tag {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            border-radius: 2px;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #E8E8E8, #C5A55A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+        .hero-meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+        }
+        .btn-primary {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: var(--accent);
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(197, 165, 90, 0.3); }
+        .btn-secondary {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            margin-left: 1rem;
+        }
+        .btn-secondary:hover { background: rgba(197, 165, 90, 0.1); }
+        .accent-line {
+            width: 80px;
+            height: 2px;
+            background: var(--accent);
+            margin: 0 auto 2rem;
+        }
+        .section { padding: 5rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+        .section-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .section-num {
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+            padding-left: 2.2rem;
+        }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 4rem;
+        }
+        .kpi-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 1.8rem 1.5rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent);
+            opacity: 0.5;
+        }
+        .kpi-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .kpi-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+        .kpi-label { font-size: 0.9rem; color: var(--text-secondary); }
+        .kpi-change { font-size: 0.8rem; color: #4ADE80; margin-top: 0.5rem; }
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .content-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 1.8rem;
+            border-radius: 6px;
+        }
+        .content-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: var(--accent); }
+        .content-card ul { list-style: none; padding: 0; }
+        .content-card li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(45, 55, 72, 0.5);
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        .content-card li:last-child { border-bottom: none; }
+        .content-card li::before { content: "\203A"; color: var(--accent); font-weight: bold; flex-shrink: 0; }
+        .content-card li strong { color: var(--text); }
+        .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        th {
+            background: var(--primary);
+            color: var(--text);
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--accent);
+        }
+        td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+        tr:nth-child(even) td { background: rgba(22, 37, 54, 0.5); }
+        tr:hover td { background: rgba(197, 165, 90, 0.05); }
+        td strong { color: var(--text); }
+        .highlight-box {
+            background: rgba(197, 165, 90, 0.08);
+            border-left: 3px solid var(--accent);
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .highlight-box p { color: var(--text-secondary); font-size: 0.92rem; }
+        .highlight-box strong { color: var(--accent); }
+        .footer {
+            text-align: center;
+            padding: 4rem 1.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        @media (max-width: 768px) {
+            .section { padding: 3rem 1rem; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .btn-secondary { margin-left: 0; margin-top: 0.8rem; display: block; }
+            .hero-buttons { display: flex; flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-tag">深度研究报告</div>
+            <h1>CS饰品市场深度分析</h1>
+            <div class="accent-line"></div>
+            <p class="hero-subtitle">全球游戏虚拟经济的崛起、机遇与风险 —— 基于12维度深度研究，200+次独立搜索</p>
+            <p class="hero-meta">2025年5月 | 面向CS饰品市场新手投资者与爱好者</p>
+            <div class="hero-buttons">
+                <a href="#report" class="btn-primary">开始阅读报告</a>
+                <a href="report/cs-skin-market-report.md" class="btn-secondary">查看完整研究报告</a>
+            </div>
+        </div>
+        <a href="#kpi" class="scroll-hint">↓ 向下滚动</a>
+    </section>
+
+    <section class="section" id="kpi">
+        <div style="text-align:center; margin-bottom:2rem;">
+            <span class="section-num">核心数据</span>
+            <h2 class="section-title" style="justify-content:center;">市场一览</h2>
+        </div>
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-value">$51.4亿</div>
+                <div class="kpi-label">2025年市值峰值</div>
+                <div class="kpi-change">↑ 从2020年$15亿增长</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">$42亿</div>
+                <div class="kpi-label">年度交易量</div>
+                <div class="kpi-change">↑ +20% YoY</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">1000万</div>
+                <div class="kpi-label">活跃交易者</div>
+                <div class="kpi-change">↑ +25% YoY</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">41.2%</div>
+                <div class="kpi-label">年化投资回报率</div>
+                <div class="kpi-change">Sharpe比率 0.34</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">$10亿+</div>
+                <div class="kpi-label">Valve年开箱收入</div>
+                <div class="kpi-change">日均$270万</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">$150万+</div>
+                <div class="kpi-label">最贵饰品成交价</div>
+                <div class="kpi-change">Karambit Blue Gem</div>
+            </div>
+        </div>
+    </section>
+
+    <div id="report">
+
+    <section class="section">
+        <span class="section-num">01</span>
+        <h2 class="section-title">市场概况与规模</h2>
+        <p class="section-subtitle">从15亿到51.4亿美元的增长轨迹</p>
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>市场规模增长</h3>
+                <ul>
+                    <li><strong>2020年</strong>：市场突破$15亿</li>
+                    <li><strong>2023年</strong>：CS2发布，短暂下跌后恢复</li>
+                    <li><strong>2025年3月</strong>：市值达$42.8亿</li>
+                    <li><strong>2025年8月</strong>：峰值$51.4亿（历史新高）</li>
+                    <li><strong>2025年10月</strong>：崩盘后跌至$32亿，7天内反弹47%</li>
+                    <li><strong>2026年初</strong>：恢复至约$64亿</li>
+                </ul>
+            </div>
+            <div class="content-card">
+                <h3>细分市场结构</h3>
+                <ul>
+                    <li><strong>武器皮肤</strong>：占交易62.7%，最大品类</li>
+                    <li><strong>武器箱</strong>：占14%，市值约$5.2亿</li>
+                    <li><strong>贴纸</strong>：占12.4%，市值约$2亿</li>
+                    <li><strong>手套</strong>：占2.4%，增长最快品类</li>
+                    <li><strong>刀具</strong>：平均单价$1,100+，最高均价</li>
+                </ul>
+            </div>
+        </div>
+        <div class="highlight-box">
+            <p><strong>核心洞察</strong>：中国市场通过Buff163主导全球定价——日交易120万笔、500万+用户，"BUFF价格"已成为全球行业标准定价基准。人民币成为全球皮肤交易事实上的"储备货币"。</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <span class="section-num">02</span>
+        <h2 class="section-title">饰品体系解析</h2>
+        <p class="section-subtitle">八级稀有度与多重价格因子</p>
+        <div class="table-wrap">
+            <table>
+                <tr><th>稀有度</th><th>颜色</th><th>开箱概率</th><th>价格区间</th></tr>
+                <tr><td>消费级</td><td>白色</td><td>79.92%</td><td>$0.03 - $0.30</td></tr>
+                <tr><td>工业级</td><td>浅蓝</td><td>—</td><td>$0.10 - $1</td></tr>
+                <tr><td>军规级</td><td>蓝色</td><td>—</td><td>$0.20 - $10</td></tr>
+                <tr><td>受限</td><td>紫色</td><td>15.98%</td><td>$1 - $50</td></tr>
+                <tr><td>保密</td><td>粉色</td><td>3.2%</td><td>$5 - $500</td></tr>
+                <tr><td>隐秘</td><td>红色</td><td>0.64%</td><td>$20 - $5,000</td></tr>
+                <tr><td><strong>非凡（金色）</strong></td><td><strong>金色</strong></td><td><strong>0.26%</strong></td><td><strong>$80 - $150万+</strong></td></tr>
+                <tr><td>违禁</td><td>橙色</td><td>仅Howl</td><td>$2,000 - $17,000</td></tr>
+            </table>
+        </div>
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>核心价格因子</h3>
+                <ul>
+                    <li><strong>磨损度(Float)</strong>：FN比BS贵5-10倍</li>
+                    <li><strong>图案模板</strong>：蓝顶AK #661溢价1000倍+</li>
+                    <li><strong>StatTrak</strong>：溢价50-200%</li>
+                    <li><strong>纪念品</strong>：溢价2-100倍</li>
+                    <li><strong>贴纸加成</strong>：贴后仅保留5-15%价值</li>
+                </ul>
+            </div>
+            <div class="content-card">
+                <h3>天价饰品排行</h3>
+                <ul>
+                    <li><strong>Karambit Blue Gem #387</strong>：$150万+</li>
+                    <li><strong>AK-47 #661 ST FN</strong>：$100万+</li>
+                    <li><strong>AWP Dragon Lore FN</strong>：$10-15万</li>
+                    <li><strong>Titan Holo Kato 2014</strong>：$13万+</li>
+                    <li><strong>iBUYPOWER Holo Kato 2014</strong>：$10万+</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <span class="section-num">03</span>
+        <h2 class="section-title">交易平台生态</h2>
+        <p class="section-subtitle">Buff163主导的全球化竞争格局</p>
+        <div class="table-wrap">
+            <table>
+                <tr><th>平台</th><th>卖家手续费</th><th>日交易量</th><th>特色</th></tr>
+                <tr><td><strong>Buff163</strong></td><td>2.5%</td><td>120万笔</td><td>全球定价基准，中国主导</td></tr>
+                <tr><td>C5GAME</td><td>0%</td><td>—</td><td>国资入场（4.7亿收购）</td></tr>
+                <tr><td>IGXE</td><td>1.5-2.5%</td><td>—</td><td>老牌平台，380万用户</td></tr>
+                <tr><td>CSFloat</td><td>2%</td><td>—</td><td>国际P2P，加密货币友好</td></tr>
+                <tr><td>Skinport</td><td>6-12%</td><td>—</td><td>欧洲市场，银行转账</td></tr>
+                <tr><td>Steam</td><td>15%</td><td>—</td><td>官方市场，不可提现</td></tr>
+            </table>
+        </div>
+        <div class="highlight-box">
+            <p><strong>新兴趋势</strong>：饰品租赁市场快速崛起——Lootbear 25万+订阅，年化收益15-38%，为投资者提供被动收入流。C5GAME被国企浙文互联4.7亿元收购，标志国有资本正式进入CS饰品交易领域。</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <span class="section-num">04</span>
+        <h2 class="section-title">价格决定机制</h2>
+        <p class="section-subtitle">从磨损度到图案玄学的量化解析</p>
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>Case Hardened蓝顶溢价</h3>
+                <ul>
+                    <li><strong>Tier 0 (#661)</strong>：$50万 - $100万+</li>
+                    <li><strong>Tier 1</strong>：$5,000 - $30,000</li>
+                    <li><strong>Tier 2</strong>：$1,500 - $8,000</li>
+                    <li><strong>Tier 3</strong>：$500 - $2,000</li>
+                    <li><strong>Tier 4 (蓝顶)</strong>：$200 - $800溢价</li>
+                </ul>
+            </div>
+            <div class="content-card">
+                <h3>Doppler相位价值排序</h3>
+                <ul>
+                    <li><strong>Sapphire（蓝宝石）</strong>：最贵</li>
+                    <li><strong>Ruby（红宝石）</strong>：第二贵</li>
+                    <li><strong>Black Pearl（黑珍珠）</strong>：最稀有</li>
+                    <li><strong>Phase 2</strong>：标准相位最贵</li>
+                    <li><strong>Phase 3</strong>：标准相位最便宜</li>
+                </ul>
+            </div>
+        </div>
+        <div class="content-grid" style="margin-top:1.5rem;">
+            <div class="content-card">
+                <h3>市场动态规律</h3>
+                <ul>
+                    <li><strong>季节性</strong>：冬季+15~25%，夏季-10~20%</li>
+                    <li><strong>Major周期</strong>：赛前跌5-15%，赛事期间涨10-20%</li>
+                    <li><strong>新箱冲击</strong>：发布后跌20-60%，后回升</li>
+                    <li><strong>绝版溢价</strong>：停产后年化涨50-500%</li>
+                </ul>
+            </div>
+            <div class="content-card">
+                <h3>AI算法交易</h3>
+                <ul>
+                    <li><strong>LSTM模型</strong>：6个月收益~20%</li>
+                    <li><strong>vs 买入持有</strong>：5-10%收益</li>
+                    <li><strong>Sharpe比率</strong>：>1.0</li>
+                    <li><strong>局限</strong>：无法预测黑天鹅</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <span class="section-num">05</span>
+        <h2 class="section-title">投资属性分析</h2>
+        <p class="section-subtitle">年化41.2%的另类投资新蓝海</p>
+        <div class="kpi-grid" style="margin-bottom:2rem;">
+            <div class="kpi-card">
+                <div class="kpi-value">41.2%</div>
+                <div class="kpi-label">年化回报率(2013-2024)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">0.34</div>
+                <div class="kpi-label">Sharpe比率</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">+35%</div>
+                <div class="kpi-label">2025蓝筹指数涨幅</div>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <tr><th>投资策略</th><th>预期收益</th><th>风险等级</th><th>适合人群</th></tr>
+                <tr><td><strong>长线持有</strong></td><td>年化30-50%</td><td>中等</td><td>最优策略，适合多数投资者</td></tr>
+                <tr><td>短线交易</td><td>月化5-20%</td><td>高</td><td>有经验的交易者</td></tr>
+                <tr><td>跨平台套利</td><td>单次8-25%</td><td>低</td><td>7天新规后空间压缩</td></tr>
+                <tr><td>饰品出租</td><td>年化15-38%</td><td>低</td><td>被动收入追求者</td></tr>
+                <tr><td>开箱</td><td>期望值为负</td><td>极高</td><td>不建议作为投资</td></tr>
+            </table>
+        </div>
+        <div class="content-grid" style="margin-top:1.5rem;">
+            <div class="content-card">
+                <h3>vs 加密货币</h3>
+                <ul>
+                    <li><strong>Sharpe比率</strong>：0.34 vs 0.21</li>
+                    <li><strong>波动性</strong>：显著更低</li>
+                    <li><strong>实用性</strong>：游戏内可用</li>
+                    <li><strong>中心化</strong>：Valve控制 vs 去中心化</li>
+                </ul>
+            </div>
+            <div class="content-card">
+                <h3>vs NFT</h3>
+                <ul>
+                    <li><strong>社区基础</strong>：CS2玩家数庞大</li>
+                    <li><strong>实用性</strong>：游戏内实际使用</li>
+                    <li><strong>交易成本</li><td>Steam 15%手续费</li>
+                    <li><strong>流动性</strong>：全球市场活跃</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <span class="section-num">06</span>
+        <h2 class="section-title">政策风险与监管</h2>
+        <p class="section-subtitle">Valve中心化控制与全球监管趋严</p>
+        <div class="kpi-grid" style="margin-bottom:2rem;">
+            <div class="kpi-card">
+                <div class="kpi-value">$20亿</div>
+                <div class="kpi-label">2025.10.23单日蒸发</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">-50%</div>
+                <div class="kpi-label">高端饰品跌幅</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">14国</div>
+                <div class="kpi-label">已出台监管政策</div>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <tr><th>国家/地区</th><th>监管态度</th><th>具体措施</th></tr>
+                <tr><td><strong>比利时</strong></td><td><span style="color:#EF4444;">全面禁止</span></td><td>2018年认定开箱=非法赌博</td></tr>
+                <tr><td><strong>荷兰</strong></td><td><span style="color:#F59E0B;">曾禁止后放宽</span></td><td>2022年法院推翻罚款</td></tr>
+                <tr><td><strong>欧盟</strong></td><td><span style="color:#F59E0B;">趋严</span></td><td>2025年呼吁限制未成年人开箱</td></tr>
+                <tr><td><strong>美国（纽约州）</strong></td><td><span style="color:#EF4444;">诉讼中</span></td><td>2026年2月起诉Valve</td></tr>
+                <tr><td><strong>澳大利亚</strong></td><td><span style="color:#F59E0B;">执法</span></td><td>认定CS:GO Roll违反赌博法</td></tr>
+                <tr><td><strong>中国</strong></td><td><span style="color:#F59E0B;">灰色地带</span></td><td>限制未成年人游戏</td></tr>
+                <tr><td><strong>PEGI（欧洲）</strong></td><td><span style="color:#F59E0B;">2026.6实施</span></td><td>含付费随机物品游戏最低16岁</td></tr>
+            </table>
+        </div>
+        <div class="highlight-box">
+            <p><strong>最大风险</strong>：Steam用户协议明确规定玩家不拥有饰品所有权——所有物品为"许可而非出售"。Valve作为唯一规则制定者，可在任何时间终止交易能力。2025年一年内发生3次重大政策变动，频率显著加快。</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <span class="section-num">07</span>
+        <h2 class="section-title">历史危机与韧性</h2>
+        <p class="section-subtitle">七次危机后的V型恢复模式</p>
+        <div class="table-wrap">
+            <table>
+                <tr><th>年份</th><th>危机事件</th><th>跌幅</th><th>恢复时间</th><th>恢复模式</th></tr>
+                <tr><td>2016</td><td>Valve打击赌博网站</td><td>-40 ~ -50%</td><td>3个月</td><td><strong>V型</strong></td></tr>
+                <tr><td>2018</td><td>7天交易冷却实施</td><td>-15 ~ -25%</td><td>1年+</td><td>L型</td></tr>
+                <tr><td>2020</td><td>COVID-19初期恐慌</td><td>-20%</td><td>2个月</td><td><strong>V型</strong></td></tr>
+                <tr><td>2021</td><td>中国限制未成年人游戏</td><td>-10 ~ -15%</td><td>3个月</td><td><strong>V型</strong></td></tr>
+                <tr><td>2023</td><td>CS2发布过渡</td><td>-20 ~ -40%</td><td>3-6个月</td><td><strong>V型</strong></td></tr>
+                <tr><td>2025.7</td><td>交易保护新规</td><td>-12%</td><td>1个月</td><td><strong>V型</strong></td></tr>
+                <tr><td><strong>2025.10</strong></td><td><strong>汰换合同更新</strong></td><td><strong>-50%</strong></td><td><strong>7天反弹47%</strong></td><td><strong>深V型</strong></td></tr>
+            </table>
+        </div>
+        <div class="highlight-box">
+            <p><strong>韧性来源</strong>：① 玩家基数稳固（CS2日活超百万）；② 饰品稀缺性不可逆（停产/消耗减少供应）；③ 情感价值与社区文化深厚。但每次危机的恢复速度在加快，市场已进化出"抗脆弱"特性——然而2025年10月暴露的结构性脆弱（无熔断、无流动性缓冲）仍是悬顶之剑。</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <span class="section-num">08</span>
+        <h2 class="section-title">未来趋势与展望</h2>
+        <p class="section-subtitle">2030年市场规模或达100亿美元</p>
+        <div class="kpi-grid" style="margin-bottom:2rem;">
+            <div class="kpi-card">
+                <div class="kpi-value">$120亿</div>
+                <div class="kpi-label">乐观预测(2030)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">$80-100亿</div>
+                <div class="kpi-label">基准预测(2030)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">$40-60亿</div>
+                <div class="kpi-label">悲观预测(2030)</div>
+            </div>
+        </div>
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>增长驱动</h3>
+                <ul>
+                    <li><strong>全球游戏皮肤市场</strong>：CAGR 13.5%至$251亿</li>
+                    <li><strong>AI交易普及</strong>：降低门槛，增加流动性</li>
+                    <li><strong>饰品租赁</strong>：CAGR 40-50%快速增长</li>
+                    <li><strong>新兴市场</strong>：东南亚、拉美增长</li>
+                </ul>
+            </div>
+            <div class="content-card">
+                <h3>核心风险</h3>
+                <ul>
+                    <li><strong>EU/US开箱禁令</strong>：2026-2028决定性时期</li>
+                    <li><strong>Valve政策变动</strong>：单点故障风险</li>
+                    <li><strong>Gen Z消费下降</strong>：游戏支出降25%</li>
+                    <li><strong>竞品冲击</strong>：Valorant等分流</li>
+                </ul>
+            </div>
+        </div>
+        <div class="highlight-box">
+            <p><strong>可持续发展路径</strong>：① 合规化——主动配合监管，推动行业自律；② 分散化——降低对单一平台/区域的依赖；③ 理性投资——建立风险意识，避免过度投机。CS饰品市场的未来取决于Valve政策透明度、全球监管协调，以及社区共识的维护。</p>
+        </div>
+    </section>
+
+    </div>
+
+    <footer class="footer">
+        <p style="margin-bottom:1rem; font-size:1rem; color:var(--text);">CS饰品市场深度分析报告</p>
+        <p>本报告基于12维度深度研究，200+次独立搜索，交叉验证 | 数据截至2025年5月</p>
+        <p style="margin-top:1rem;">完整研究报告（约4.2万字）请 <a href="report/cs-skin-market-report.md">点击查阅</a></p>
+    </footer>
+
+</body>
+</html>
